@@ -132,18 +132,23 @@ int main() {
 
 		// print the results
 		cout << "The shortest found route goes through the following cities:\n";
-		for (const Fitness::City city : bestRoute) {
-			cout << city << ", ";
+		for (int i = 0; i < bestRoute.size(); i++) {
+			Location* fromCity = new Fitness::City(bestRoute[i].getX(), bestRoute[i].getY());
+			Location* toCity = (i + 1 < bestRoute.size()) ? new Fitness::City(bestRoute[i + 1].getX(), bestRoute[i + 1].getY())
+				: new Fitness::City(bestRoute[0].getX(), bestRoute[0].getY());
+			cout << *dynamic_cast<Fitness::City*>(fromCity) << " - " << (fromCity->distance(toCity)) << " km - ";
+			if (i % 2 == 1)
+				cout << endl;
 		}
 		cout << endl;
 
-		// write the results to a file
-		ofstream outputFile("bestRouteCities.txt");
+		//write a results to a file
+		ofstream outputFile("./cities/bestRouteCities.txt");
 		if (outputFile.is_open()) {
-			outputFile << "The shortest found route goes through the following cities:\n";
-			for (const auto& city : bestRoute) {
-				outputFile << city << "\n";
+			for (int i = 0; i < bestRoute.size() - 1; i++) {
+				outputFile << bestRoute[i].getX() << " " << bestRoute[i].getY() << "\n";
 			}
+			outputFile << bestRoute[bestRoute.size() - 1].getX() << " " << bestRoute[bestRoute.size() - 1].getY();
 			outputFile.close();
 			cout << "Results written to bestRouteCities.txt" << endl;
 		}
